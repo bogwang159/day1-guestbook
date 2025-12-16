@@ -1,0 +1,35 @@
+# Guestbook API 명세서
+
+## 1. 방명록 목록 조회
+
+- Method: GET
+- URL: /api/guestbooks
+
+### Response 예시
+```json
+[
+  {
+    "id": 1,
+    "name": "홍길동",
+    "message": "안녕하세요"
+  }
+]
+2. 방명록 등록
+
+Method: POST
+
+URL: /api/guestbooks
+
+Content-Type: application/json
+
+Request Body
+{
+  "name": "유보광",
+  "message": "안녕하세요"
+}
+Response 예시
+{
+  "id": 1,
+  "name": "유보광",
+  "message": "안녕하세요"
+}
