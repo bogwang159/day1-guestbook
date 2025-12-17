@@ -1,0 +1,43 @@
+# Docker 구성 설명
+
+## 1. Docker를 사용하는 이유
+개발 환경과 배포 환경의 차이를 줄이고,  
+프론트엔드, 백엔드, 데이터베이스를 동일한 실행 환경에서 관리하기 위해 Docker를 사용하였다.
+
+---
+
+## 2. Backend Dockerfile 설명
+
+```dockerfile
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY build/libs/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
+---
+FROM: Java 21(JDK)이 설치된 이미지를 기반으로 사용
+
+WORKDIR: 컨테이너 내부 작업 디렉토리 설정
+
+COPY: 빌드된 Spring Boot JAR 파일을 컨테이너로 복사
+
+ENTRYPOINT: 애플리케이션 실행 명령
+
+## 3. Frontend Dockerfile 설명
+
+Node.js 20 환경에서 Next.js 애플리케이션 실행
+EC2의 리소스 한계를 고려하여 빌드는 로컬에서 수행
+실행에 필요한 결과물만 컨테이너에서 실행
+프론트엔드는 3000번 포트로 실행된다.
+
+---
+## 4. docker-compose 역할
+docker-compose를 사용하여
+
+MySQL
+
+Backend(Spring Boot)
+
+Frontend(Next.js)
+
+세 개의 컨테이너를 한 번에 실행하고,
+컨테이너 간 네트워크 연결과 실행 순서를 관리한다.

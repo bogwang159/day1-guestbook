@@ -1,0 +1,40 @@
+## 📄 04-deploy.md
+
+```md
+# AWS 배포 설명
+
+## 1. EC2를 선택한 이유
+AWS EC2는 가상 서버 환경을 제공하여 Docker 기반 애플리케이션을 직접 배포하고 관리할 수 있기 때문에 선택하였다.
+
+---
+
+## 2. 보안 그룹 설정 이유
+- 22번 포트: SSH 접속을 위해 개방
+- 80번 포트: HTTP 접속 허용
+- 3000번 포트: Next.js 프론트엔드 접근
+- 8080번 포트: Spring Boot 백엔드 API 접근
+
+---
+
+## 3. 서버에서 실행한 명령 흐름
+```bash
+sudo yum update -y
+sudo yum install docker -y
+sudo service docker start
+sudo usermod -aG docker ec2-user
+
+# Docker Compose 설치
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# 프로젝트 실행
+git clone https://github.com/bogwang159/day1-guestbook.git
+cd day1-guestbook
+docker compose up -d
+---
+
+##4. 배포 후 접속 방식
+
+프론트엔드: http://EC2_PUBLIC_IP:3000
+
+백엔드 API: http://EC2_PUBLIC_IP:8080
