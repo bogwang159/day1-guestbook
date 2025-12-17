@@ -1,0 +1,26 @@
+# CI/CD 설명
+
+## 1. GitHub Actions를 사용하는 이유
+GitHub Actions를 사용하면 코드를 GitHub에 Push할 때마다 자동으로 빌드, 테스트, Docker 이미지 생성, EC2 배포까지 수행할 수 있습니다.  
+수동으로 서버에 배포하지 않아도 되어 배포 시간을 단축하고, 배포 과정에서 발생할 수 있는 실수를 줄일 수 있습니다.
+
+## 2. 워크플로우 실행 조건
+- main 브랜치에 Push 발생 시 실행
+- GitHub Actions에서 정의한 `.github/workflows/deploy.yml`에 따라 Backend, Frontend 빌드 후 Docker Hub에 Push, EC2에서 Pull 및 실행
+
+## 3. 자동화된 단계별 흐름
+1. GitHub에 코드 Push
+2. Actions가 Push 이벤트 감지
+3. Backend, Frontend Docker 이미지 빌드
+4. Docker Hub에 이미지 Push
+5. EC2 서버에 SSH 접속
+6. Docker Compose로 최신 이미지 Pull 및 컨테이너 재시작
+7. 배포 완료 후 웹에서 서비스 확인 가능
+
+## 4. (있다면) 실패했을 때 원인과 해결 과정
+- 오류: `COPY build/libs/*.jar app.jar` 실패
+  - 원인: EC2에서 Gradle build를 먼저 수행하지 않아 JAR 파일이 없었음
+  - 해결: EC2에서 `./gradlew build -x test` 실행 후 Docker 빌드
+- 오류: Docker Hub 로그인 실패
+  - 원인: GitHub Secrets에 Docker Hub ID/Password 잘못 입력
+  - 해결: 올바른 ID, PW로 Secrets 수정 후 재실행
